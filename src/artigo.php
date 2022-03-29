@@ -1,42 +1,52 @@
 <?php
 
-class Artigo {
+class Artigo
+{
 
     private $mysql;
 
     public function __construct(mysqli $mysql)
     {
-        $this -> mysql = $mysql;
-        
+        $this->mysql = $mysql;
     }
 
     public function adicionar(string $titulo, string $conteudo): void
     {
-    
-        $InsereArtigo = $this -> mysql-> prepare('INSERT INTO artigos (titulo, conteudo) VALUES (?,?);');
-        $InsereArtigo -> bind_param('ss', $titulo, $conteudo);
-        $InsereArtigo-> execute();
-    
+        $insereArtigo = $this->mysql->prepare('INSERT INTO artigos (titulo, conteudo) VALUES(?,?);');
+        $insereArtigo->bind_param('ss', $titulo, $conteudo);
+        $insereArtigo->execute();
+    }
 
+    public function remover(string $id): void
+    {
+        $removerArtigo = $this->mysql->prepare('DELETE FROM artigos WHERE id = ?');
+        $removerArtigo->bind_param('s', $id);
+        $removerArtigo->execute();
     }
 
     public function exibirTodos(): array
     {
-        $resultado = $this -> mysql -> query('SELECT id, titulo, conteudo FROM artigos');
-        $artigos = $resultado -> fetch_all(MYSQLI_ASSOC);
-        
+
+        $resultado = $this->mysql->query('SELECT id, titulo, conteudo FROM artigos');
+        $artigos = $resultado->fetch_all(MYSQLI_ASSOC);
+
         return $artigos;
     }
 
     public function encontrarPorId(string $id): array
     {
-        $SelecionaArtigo = $this -> mysql -> prepare("SELECT id, titulo, conteudo FROM artigos 
-        WHERE id = ?");
-        $SelecionaArtigo -> bind_param('s', $id);
-        $SelecionaArtigo -> execute(); 
-        $artigo = $SelecionaArtigo -> get_result()-> fetch_assoc();
+        $selecionaArtigo = $this->mysql->prepare("SELECT id, titulo, conteudo FROM artigos WHERE id = ?");
+        $selecionaArtigo->bind_param('s', $id);
+        $selecionaArtigo->execute();
+        $artigo = $selecionaArtigo->get_result()->fetch_assoc();
         return $artigo;
-     }
-}
+    }
 
+    public function editar(string $id, string $titulo, string $conteudo): void
+    {
+        $editaArtigo = $this->mysql->prepare('UPDATE artigos SET titulo = ?, conteudo = ? WHERE id = ?');
+        $editaArtigo->bind_param('sss', $titulo, $conteudo, $id);
+        $editaArtigo->execute();
+    }
+}
 ?>

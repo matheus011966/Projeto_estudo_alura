@@ -30,7 +30,7 @@
             <?php echo $artigo['conteudo'];?>
          </p>
         <div>
-            <a class="botao botao-block" href="index.php">Voltar</a>
+            <a class="botao botao-block" href="Inicial.php">Voltar</a>
         </div>
     </div>
 </body>
